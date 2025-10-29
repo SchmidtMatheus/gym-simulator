@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "REDwiCt3oPQ=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Yuri Boppre\\Documents\\excluir\\GymSimulator\\GymSimulator.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Yuri Boppre\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.10\\microsoft.aspnetcore.openapi.8.0.10.nupkg.sha512",
+    "C:\\Users\\Yuri Boppre\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512"
+  ],
+  "logs": []
+}

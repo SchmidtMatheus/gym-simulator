@@ -1,0 +1,8 @@
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\GymSimulator.csproj.AssemblyReference.cache
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\GymSimulator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\GymSimulator.AssemblyInfoInputs.cache
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\GymSimulator.AssemblyInfo.cs
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\GymSimulator.csproj.CoreCompileInputs.cache
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\GymSimulator.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\obj\Debug\net8.0\GymSimulator.MvcApplicationPartsAssemblyInfo.cache

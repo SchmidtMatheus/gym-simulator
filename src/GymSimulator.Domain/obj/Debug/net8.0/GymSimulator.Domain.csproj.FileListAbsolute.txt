@@ -1,0 +1,11 @@
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\bin\Debug\net8.0\GymSimulator.Domain.deps.json
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\bin\Debug\net8.0\GymSimulator.Domain.dll
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\bin\Debug\net8.0\GymSimulator.Domain.pdb
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\GymSimulator.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\GymSimulator.Domain.AssemblyInfoInputs.cache
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\GymSimulator.Domain.AssemblyInfo.cs
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\GymSimulator.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\GymSimulator.Domain.dll
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\refint\GymSimulator.Domain.dll
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\GymSimulator.Domain.pdb
+C:\Users\Yuri Boppre\Documents\excluir\GymSimulator\src\GymSimulator.Domain\obj\Debug\net8.0\ref\GymSimulator.Domain.dll

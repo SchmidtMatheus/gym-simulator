@@ -1,0 +1,18 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Build
+*.dll
+*.exe
+*.db
+*.log
+
+# EF Core Migrations snapshots
+Migrations/*.Designer.cs

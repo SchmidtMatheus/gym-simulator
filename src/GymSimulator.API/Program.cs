@@ -5,16 +5,25 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowNextJS", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// DbContext: InMemory for now; change to UseSqlServer with your connection string.
 builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("GymSimulator.API"))
 );
 
-// DI services
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IPlanTypeService, PlanTypeService>();
 builder.Services.AddScoped<IClassTypeService, ClassTypeService>();
@@ -23,13 +32,17 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
 
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+app.UseCors("AllowNextJS");
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

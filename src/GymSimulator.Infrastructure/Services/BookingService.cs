@@ -28,7 +28,7 @@ public class BookingService : IBookingService
         var totalCount = await query.CountAsync();
 
         var bookings = await query
-                .OrderBy(s => s.CreatedAt)
+                .OrderByDescending(s => s.CreatedAt)
                 .Skip(request.Skip)
                 .Take(request.Take)
                 .ToListAsync(cancellationToken);

@@ -11,6 +11,5 @@ public class PlanType
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; }
 
-    // Relacionamento 1:N com Students
     public ICollection<Student> Students { get; set; } = new List<Student>();
 }

@@ -1,5 +1,6 @@
 using GymSimulator.Application.Abstractions;
 using GymSimulator.Infrastructure.Data;
+using GymSimulator.Infrastructure.Data.Seeds;
 using GymSimulator.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,19 @@ builder.Services.AddScoped<IClassService, ClassService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        await SeedData.InitializeAsync(scope.ServiceProvider);
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Erro ao executar seed data");
+    }
+}
 
 
 if (app.Environment.IsDevelopment())

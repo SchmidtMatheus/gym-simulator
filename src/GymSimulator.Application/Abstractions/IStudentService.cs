@@ -1,14 +1,14 @@
 using GymSimulator.Application.DTOs;
-using GymSimulator.Domain.Entities;
+using GymSimulator.Application.DTOs.Common;
 
 namespace GymSimulator.Application.Abstractions;
 
 public interface IStudentService
 {
-    Task<IEnumerable<Student>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    Task<Student> CreateAsync(StudentCreateDto dto, CancellationToken cancellationToken = default);
-    Task<Student?> UpdateAsync(Guid id, StudentUpdateDto dto, CancellationToken cancellationToken = default);
+    Task<PagedResponse<StudentDto>> GetAllAsync(PagedRequest request, CancellationToken cancellationToken = default);
+    Task<StudentDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<StudentDto> CreateAsync(StudentCreateDto dto, CancellationToken cancellationToken = default);
+    Task<StudentDto?> UpdateAsync(Guid id, StudentUpdateDto dto, CancellationToken cancellationToken = default);
     Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
 }
 

@@ -31,7 +31,6 @@ public class ClassTypeService : IClassTypeService
         {
             Name = dto.Name,
             Description = dto.Description,
-            IntensityLevel = dto.IntensityLevel,
             IsActive = dto.IsActive,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -47,7 +46,6 @@ public class ClassTypeService : IClassTypeService
         if (entity is null) return null;
         entity.Name = dto.Name;
         entity.Description = dto.Description;
-        entity.IntensityLevel = dto.IntensityLevel;
         entity.IsActive = dto.IsActive;
         entity.UpdatedAt = DateTime.UtcNow;
         await _dbContext.SaveChangesAsync(cancellationToken);

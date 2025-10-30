@@ -1,6 +1,6 @@
 using GymSimulator.Application.Abstractions;
 using GymSimulator.Application.DTOs;
-using GymSimulator.Domain.Entities;
+using GymSimulator.Application.DTOs.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymSimulator.API.Controllers;
@@ -17,13 +17,13 @@ public class BookingsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Booking>>> GetAll(CancellationToken ct)
+    public async Task<ActionResult<PagedResponse<BookingDto>>> GetAll([FromQuery]PagedRequest request, CancellationToken ct)
     {
-        return Ok(await _service.GetAllAsync(ct));
+        return Ok(await _service.GetAllAsync(request,ct));
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Booking>> GetById(Guid id, CancellationToken ct)
+    public async Task<ActionResult<BookingDto>> GetById(Guid id, CancellationToken ct)
     {
         var item = await _service.GetByIdAsync(id, ct);
         if (item is null) return NotFound();
@@ -31,10 +31,8 @@ public class BookingsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Booking>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
+    public async Task<ActionResult<BookingDto>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
     {
-        var already = (await _service.GetAllAsync(ct)).Any(b => b.StudentId == dto.StudentId && b.ClassId == dto.ClassId);
-        if (already) return Conflict(new { message = "Reserva já existe para este aluno e aula" });
         var created = await _service.CreateAsync(dto, ct);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }

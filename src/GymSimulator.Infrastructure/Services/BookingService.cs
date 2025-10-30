@@ -1,5 +1,7 @@
 using GymSimulator.Application.Abstractions;
 using GymSimulator.Application.DTOs;
+using GymSimulator.Application.DTOs.Common;
+using GymSimulator.Application.Mappings;
 using GymSimulator.Domain.Entities;
 using GymSimulator.Domain.Enums;
 using GymSimulator.Infrastructure.Data;
@@ -16,38 +18,54 @@ public class BookingService : IBookingService
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Booking>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<BookingDto>> GetAllAsync(PagedRequest request, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Bookings
-            .AsNoTracking()
+        var query = _dbContext.Bookings
             .Include(b => b.Student)
             .Include(b => b.Class)
-            .ToListAsync(cancellationToken);
+            .AsQueryable();
+
+        var totalCount = await query.CountAsync();
+
+        var bookings = await query
+                .OrderBy(s => s.CreatedAt)
+                .Skip(request.Skip)
+                .Take(request.Take)
+                .ToListAsync(cancellationToken);
+
+        var bookingDtos = bookings.ToDto();
+
+        return new PagedResponse<BookingDto>(
+            bookingDtos, totalCount, request.PageNumber, request.PageSize);
     }
 
-    public async Task<Booking?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<BookingDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Bookings
+        var query = await _dbContext.Bookings
             .Include(b => b.Student)
             .Include(b => b.Class)
             .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
+
+        if (query == null)
+            return null;
+
+        var bookingDto = query.ToDto();
+        return bookingDto;
     }
 
-    public async Task<Booking> CreateAsync(BookingCreateDto dto, CancellationToken cancellationToken = default)
+    public async Task<BookingDto> CreateAsync(BookingCreateDto dto, CancellationToken cancellationToken = default)
     {
         var student = await _dbContext.Students.Include(s => s.PlanType).FirstOrDefaultAsync(s => s.Id == dto.StudentId, cancellationToken)
-            ?? throw new InvalidOperationException("Student not found");
+            ?? throw new InvalidOperationException("Aluno não encontrado");
         var gymClass = await _dbContext.Classes.FirstOrDefaultAsync(c => c.Id == dto.ClassId, cancellationToken)
-            ?? throw new InvalidOperationException("Class not found");
+            ?? throw new InvalidOperationException("Aula não encontrada");
 
-        if (!student.IsActive) throw new InvalidOperationException("Student is not active");
-        if (!gymClass.IsActive || gymClass.IsCancelled) throw new InvalidOperationException("Class is not available");
+        if (!student.IsActive) throw new InvalidOperationException("Aluno não está ativo no sistema");
+        if (!gymClass.IsActive || gymClass.IsCancelled) throw new InvalidOperationException("Aula não disponível");
 
-        // enforce capacity
         if (gymClass.CurrentParticipants >= gymClass.MaxCapacity)
-            throw new InvalidOperationException("Class is full");
+            throw new InvalidOperationException("Aula já está cheia!");
 
-        // enforce monthly plan limit
         var currentMonth = DateTime.UtcNow.ToString("yyyyMM");
         if (student.CurrentMonthYear != currentMonth)
         {
@@ -55,7 +73,7 @@ public class BookingService : IBookingService
             student.MonthlyClassCount = 0;
         }
         if (student.MonthlyClassCount >= student.PlanType.MonthlyClassLimit)
-            throw new InvalidOperationException("Monthly class limit reached");
+            throw new InvalidOperationException("Número máximo de aulas para o seu plano já foi atingido!");
 
         var booking = new Booking
         {
@@ -72,7 +90,8 @@ public class BookingService : IBookingService
         _dbContext.Bookings.Add(booking);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return booking;
+
+        return booking.ToDto();
     }
 
     public async Task<bool> CancelAsync(Guid id, string? reason = null, CancellationToken cancellationToken = default)
@@ -87,7 +106,6 @@ public class BookingService : IBookingService
         booking.CancelledAt = DateTime.UtcNow;
         booking.UpdatedAt = DateTime.UtcNow;
 
-        // free spot and revert monthly count (simple approach)
         if (booking.Class.CurrentParticipants > 0)
             booking.Class.CurrentParticipants -= 1;
         if (booking.Student.MonthlyClassCount > 0)

@@ -1,5 +1,7 @@
 using GymSimulator.Application.Abstractions;
 using GymSimulator.Application.DTOs;
+using GymSimulator.Application.DTOs.Common;
+using GymSimulator.Application.Mappings;
 using GymSimulator.Domain.Entities;
 using GymSimulator.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -15,22 +17,34 @@ public class StudentService : IStudentService
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Student>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<PagedResponse<StudentDto>> GetAllAsync(PagedRequest request, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Students
-            .AsNoTracking()
-            .Include(s => s.PlanType)
-            .ToListAsync(cancellationToken);
+        var query = _dbContext.Students
+                .Include(s => s.PlanType)
+                .AsQueryable();
+        var totalCount = await query.CountAsync();
+
+        var students = await query
+                .OrderBy(s => s.Name)
+                .Skip(request.Skip)
+                .Take(request.Take)
+                .ToListAsync(cancellationToken);
+
+        var studentDtos = students.ToDto();
+        return new PagedResponse<StudentDto>(
+            studentDtos, totalCount, request.PageNumber, request.PageSize);
     }
 
-    public async Task<Student?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<StudentDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Students
-            .Include(s => s.PlanType)
-            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        var student = await _dbContext.Students
+                .Include(s => s.PlanType)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+        return student?.ToDto();
     }
 
-    public async Task<Student> CreateAsync(StudentCreateDto dto, CancellationToken cancellationToken = default)
+    public async Task<StudentDto> CreateAsync(StudentCreateDto dto, CancellationToken cancellationToken = default)
     {
         var entity = new Student
         {
@@ -47,10 +61,10 @@ public class StudentService : IStudentService
 
         _dbContext.Students.Add(entity);
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return entity;
+        return entity.ToDto();
     }
 
-    public async Task<Student?> UpdateAsync(Guid id, StudentUpdateDto dto, CancellationToken cancellationToken = default)
+    public async Task<StudentDto?> UpdateAsync(Guid id, StudentUpdateDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await _dbContext.Students.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         if (entity is null) return null;
@@ -63,7 +77,7 @@ public class StudentService : IStudentService
         entity.UpdatedAt = DateTime.UtcNow;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
-        return entity;
+        return entity.ToDto();
     }
 
     public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)

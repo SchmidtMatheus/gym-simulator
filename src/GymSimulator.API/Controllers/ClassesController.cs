@@ -24,7 +24,7 @@ public class ClassesController : ControllerBase
         return Ok(await _service.GetAllAsync(request,ct));
     }
 
-    [HttpGet("/avaliable")]
+    [HttpGet("list/available")]
     public async Task<ActionResult<PagedResponse<ClassDto>>> GetAvailable([FromQuery] PagedRequest request, CancellationToken ct)
     {
         var result = await _service.GetAvailableAsync(request, ct);

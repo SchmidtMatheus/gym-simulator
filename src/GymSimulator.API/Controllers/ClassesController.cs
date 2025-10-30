@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymSimulator.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/classes")]
 public class ClassesController : ControllerBase
 {
     private readonly IClassService _service;

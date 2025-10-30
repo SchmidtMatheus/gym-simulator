@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GymSimulator.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/class-types")]
 public class ClassTypesController : ControllerBase
 {
     private readonly IClassTypeService _service;
@@ -33,7 +33,6 @@ public class ClassTypesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ClassType>> Create([FromBody] ClassTypeCreateDto dto, CancellationToken ct)
     {
-        // regra básica anti-duplicação por Name
         var exists = (await _service.GetAllAsync(ct)).Any(x => x.Name == dto.Name);
         if (exists) return Conflict(new { message = "Tipo de aula já existe com este nome" });
         var created = await _service.CreateAsync(dto, ct);

@@ -44,6 +44,61 @@ public class StudentService : IStudentService
         return student?.ToDto();
     }
 
+    public async Task<StudentReportDto> GetStudentReportAsync(Guid studentId, CancellationToken cancellationToken)
+    {
+        var today = DateTime.UtcNow;
+        return await GetStudentReportAsync(studentId, today.Month, today.Year, cancellationToken);
+    }
+
+    public async Task<StudentReportDto> GetStudentReportAsync(Guid studentId, int month, int year, CancellationToken cancellationToken)
+    {
+        var student = await _dbContext.Students
+            .FirstOrDefaultAsync(s => s.Id == studentId);
+
+        if (student == null)
+        {
+            throw new ArgumentException($"Aluno com ID {studentId} não encontrado.");
+        }
+
+        var startDate = new DateTime(year, month, 1);
+        var endDate = startDate.AddMonths(1).AddDays(-1);
+
+        var studentBookings = await _dbContext.Bookings
+            .Include(b => b.Class)
+                .ThenInclude(c => c.ClassType)
+            .Where(b => b.StudentId == studentId &&
+                       b.BookingDate >= startDate &&
+                       b.BookingDate <= endDate &&
+                       b.BookingStatus != Domain.Enums.BookingStatus.Cancelado)
+            .ToListAsync(cancellationToken);
+
+        var totalClasses = studentBookings.Count;
+
+        var classTypeFrequency = studentBookings
+            .GroupBy(b => new { b.Class.ClassTypeId, b.Class.ClassType.Name })
+            .Select(g => new ClassTypeFrequencyDto
+            {
+                ClassTypeId = g.Key.ClassTypeId,
+                ClassTypeName = g.Key.Name,
+                BookingCount = g.Count(),
+                Percentage = totalClasses > 0 ? (double)g.Count() / totalClasses * 100 : 0
+            })
+            .OrderByDescending(x => x.BookingCount)
+            .Take(5)
+            .ToList();
+
+        return new StudentReportDto
+        {
+            StudentId = student.Id,
+            StudentName = student.Name,
+            StudentEmail = student.Email,
+            TotalClassesThisMonth = totalClasses,
+            MostFrequentClassTypes = classTypeFrequency,
+            ReportDate = DateTime.UtcNow
+        };
+    }
+
+
     public async Task<StudentDto> CreateAsync(StudentCreateDto dto, CancellationToken cancellationToken = default)
     {
         var entity = new Student

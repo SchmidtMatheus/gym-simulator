@@ -52,6 +52,30 @@ public class ClassService : IClassService
 
         return query.ToDto();
     }
+    public async Task<PagedResponse<ClassDto>> GetAvailableAsync(PagedRequest request, CancellationToken cancellationToken = default)
+    {
+        var query = _dbContext.Classes
+            .Include(c => c.ClassType)
+            .Where(c => c.IsActive && !c.IsCancelled && c.CurrentParticipants < c.MaxCapacity)
+            .AsQueryable();
+
+        var totalCount = await query.CountAsync();
+
+        var availableClasses = await query
+            .OrderBy(c => c.ScheduledAt)
+            .Skip(request.Skip)
+            .Take(request.Take)
+            .ToListAsync(cancellationToken);
+
+        var availableClassDtos = availableClasses.ToDto();
+
+        return new PagedResponse<ClassDto>(
+            availableClassDtos,
+            totalCount,
+            request.PageNumber,
+            request.PageSize
+        );
+    }
 
     public async Task<ClassDto> CreateAsync(ClassCreateDto dto, CancellationToken cancellationToken = default)
     {

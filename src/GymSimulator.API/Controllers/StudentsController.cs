@@ -32,6 +32,14 @@ public class StudentsController : ControllerBase
         return Ok(item);
     }
 
+    [HttpGet("{id}/report")]
+    public async Task<ActionResult<StudentReportDto>> GetStudentReport(Guid id, CancellationToken ct)
+    {
+        var item = await _service.GetStudentReportAsync(id, ct);
+        if (item is null) return NotFound();
+        return Ok(item);
+    }
+
     [HttpPost]
     public async Task<ActionResult<StudentDto>> Create([FromBody] StudentCreateDto dto, CancellationToken ct)
     {

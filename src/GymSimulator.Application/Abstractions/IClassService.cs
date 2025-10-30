@@ -7,6 +7,7 @@ namespace GymSimulator.Application.Abstractions;
 public interface IClassService
 {
     Task<PagedResponse<ClassDto>> GetAllAsync(PagedRequest request, CancellationToken cancellationToken = default);
+    Task<PagedResponse<ClassDto>> GetAvailableAsync(PagedRequest request, CancellationToken cancellationToken = default);
     Task<ClassDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
     Task<ClassDto> CreateAsync(ClassCreateDto dto, CancellationToken cancellationToken = default);
     Task<ClassDto?> UpdateAsync(Guid id, ClassUpdateDto dto, CancellationToken cancellationToken = default);

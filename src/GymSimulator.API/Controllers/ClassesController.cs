@@ -2,6 +2,7 @@ using GymSimulator.Application.Abstractions;
 using GymSimulator.Application.DTOs;
 using GymSimulator.Application.DTOs.Common;
 using GymSimulator.Domain.Entities;
+using GymSimulator.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymSimulator.API.Controllers;
@@ -21,6 +22,13 @@ public class ClassesController : ControllerBase
     public async Task<ActionResult<PagedResponse<ClassDto>>> GetAll([FromQuery]PagedRequest request,CancellationToken ct)
     {
         return Ok(await _service.GetAllAsync(request,ct));
+    }
+
+    [HttpGet("/avaliable")]
+    public async Task<ActionResult<PagedResponse<ClassDto>>> GetAvailable([FromQuery] PagedRequest request, CancellationToken ct)
+    {
+        var result = await _service.GetAvailableAsync(request, ct);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]

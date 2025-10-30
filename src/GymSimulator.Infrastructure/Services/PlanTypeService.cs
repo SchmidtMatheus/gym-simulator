@@ -20,7 +20,7 @@ public class PlanTypeService : IPlanTypeService
         return await _dbContext.PlanTypes.AsNoTracking().ToListAsync(cancellationToken);
     }
 
-    public async Task<PlanType?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<PlanType?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.PlanTypes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
@@ -41,7 +41,7 @@ public class PlanTypeService : IPlanTypeService
         return entity;
     }
 
-    public async Task<PlanType?> UpdateAsync(int id, PlanTypeUpdateDto dto, CancellationToken cancellationToken = default)
+    public async Task<PlanType?> UpdateAsync(Guid id, PlanTypeUpdateDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await _dbContext.PlanTypes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (entity is null) return null;
@@ -54,7 +54,7 @@ public class PlanTypeService : IPlanTypeService
         return entity;
     }
 
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var entity = await _dbContext.PlanTypes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (entity is null) return false;

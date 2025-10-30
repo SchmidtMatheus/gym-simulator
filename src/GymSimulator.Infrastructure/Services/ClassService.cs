@@ -23,7 +23,7 @@ public class ClassService : IClassService
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Class?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Class?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Classes
             .Include(c => c.ClassType)
@@ -47,7 +47,7 @@ public class ClassService : IClassService
         return entity;
     }
 
-    public async Task<Class?> UpdateAsync(int id, ClassUpdateDto dto, CancellationToken cancellationToken = default)
+    public async Task<Class?> UpdateAsync(Guid id, ClassUpdateDto dto, CancellationToken cancellationToken = default)
     {
         var entity = await _dbContext.Classes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (entity is null) return null;
@@ -62,7 +62,7 @@ public class ClassService : IClassService
         return entity;
     }
 
-    public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var entity = await _dbContext.Classes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         if (entity is null) return false;

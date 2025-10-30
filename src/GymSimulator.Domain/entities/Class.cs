@@ -2,8 +2,8 @@ namespace GymSimulator.Domain.Entities;
 
 public class Class
 {
-    public int Id { get; set; }
-    public int ClassTypeId { get; set; }
+    public Guid Id { get; set; }
+    public Guid ClassTypeId { get; set; }
     public ClassType ClassType { get; set; } = null!;
     public DateTime ScheduledAt { get; set; }
     public int DurationMinutes { get; set; } = 60;

@@ -23,7 +23,7 @@ public class BookingsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Booking>> GetById(int id, CancellationToken ct)
+    public async Task<ActionResult<Booking>> GetById(Guid id, CancellationToken ct)
     {
         var item = await _service.GetByIdAsync(id, ct);
         if (item is null) return NotFound();
@@ -33,12 +33,14 @@ public class BookingsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Booking>> Create([FromBody] BookingCreateDto dto, CancellationToken ct)
     {
+        var already = (await _service.GetAllAsync(ct)).Any(b => b.StudentId == dto.StudentId && b.ClassId == dto.ClassId);
+        if (already) return Conflict(new { message = "Reserva já existe para este aluno e aula" });
         var created = await _service.CreateAsync(dto, ct);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPost("{id}/cancel")]
-    public async Task<ActionResult> Cancel(int id, [FromQuery] string? reason, CancellationToken ct)
+    public async Task<ActionResult> Cancel(Guid id, [FromQuery] string? reason, CancellationToken ct)
     {
         var ok = await _service.CancelAsync(id, reason, ct);
         if (!ok) return NotFound();

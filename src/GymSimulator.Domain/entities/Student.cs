@@ -2,12 +2,12 @@ namespace GymSimulator.Domain.Entities;
 
 public class Student
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string? Email { get; set; }
     public string? Phone { get; set; }
 
-    public int PlanTypeId { get; set; }
+    public Guid PlanTypeId { get; set; }
     public PlanType PlanType { get; set; } = null!;
 
     public bool IsActive { get; set; } = true;

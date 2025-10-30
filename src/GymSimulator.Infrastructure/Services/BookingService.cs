@@ -25,7 +25,7 @@ public class BookingService : IBookingService
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<Booking?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<Booking?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Bookings
             .Include(b => b.Student)
@@ -75,7 +75,7 @@ public class BookingService : IBookingService
         return booking;
     }
 
-    public async Task<bool> CancelAsync(int id, string? reason = null, CancellationToken cancellationToken = default)
+    public async Task<bool> CancelAsync(Guid id, string? reason = null, CancellationToken cancellationToken = default)
     {
         var booking = await _dbContext.Bookings.Include(b => b.Class).Include(b => b.Student).FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
         if (booking is null) return false;

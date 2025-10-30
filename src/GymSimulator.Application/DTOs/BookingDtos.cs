@@ -1,5 +1,5 @@
 namespace GymSimulator.Application.DTOs;
 
-public record BookingCreateDto(int StudentId, int ClassId);
+public record BookingCreateDto(Guid StudentId, Guid ClassId);
 
 

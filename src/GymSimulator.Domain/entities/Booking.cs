@@ -4,12 +4,12 @@ namespace GymSimulator.Domain.Entities;
 
 public class Booking
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int StudentId { get; set; }
+    public Guid StudentId { get; set; }
     public Student Student { get; set; } = null!;
 
-    public int ClassId { get; set; }
+    public Guid ClassId { get; set; }
     public Class Class { get; set; } = null!;
 
     public BookingStatus BookingStatus { get; set; } = BookingStatus.Agendado;

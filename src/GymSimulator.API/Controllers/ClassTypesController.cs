@@ -23,7 +23,7 @@ public class ClassTypesController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<ClassType>> GetById(int id, CancellationToken ct)
+    public async Task<ActionResult<ClassType>> GetById(Guid id, CancellationToken ct)
     {
         var item = await _service.GetByIdAsync(id, ct);
         if (item is null) return NotFound();
@@ -33,12 +33,15 @@ public class ClassTypesController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ClassType>> Create([FromBody] ClassTypeCreateDto dto, CancellationToken ct)
     {
+        // regra básica anti-duplicação por Name
+        var exists = (await _service.GetAllAsync(ct)).Any(x => x.Name == dto.Name);
+        if (exists) return Conflict(new { message = "Tipo de aula já existe com este nome" });
         var created = await _service.CreateAsync(dto, ct);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id}")]
-    public async Task<ActionResult<ClassType>> Update(int id, [FromBody] ClassTypeUpdateDto dto, CancellationToken ct)
+    public async Task<ActionResult<ClassType>> Update(Guid id, [FromBody] ClassTypeUpdateDto dto, CancellationToken ct)
     {
         var updated = await _service.UpdateAsync(id, dto, ct);
         if (updated is null) return NotFound();
@@ -46,7 +49,7 @@ public class ClassTypesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(int id, CancellationToken ct)
+    public async Task<ActionResult> Delete(Guid id, CancellationToken ct)
     {
         var removed = await _service.DeleteAsync(id, ct);
         if (!removed) return NotFound();

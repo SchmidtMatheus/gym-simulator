@@ -2,13 +2,13 @@ namespace GymSimulator.Domain.Entities;
 
 public class BookingHistory
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int BookingId { get; set; }
+    public Guid BookingId { get; set; }
     public Booking Booking { get; set; } = null!;
 
-    public int StudentId { get; set; }
-    public int ClassId { get; set; }
+    public Guid StudentId { get; set; }
+    public Guid ClassId { get; set; }
 
     public int? OldStatus { get; set; }
     public int NewStatus { get; set; }

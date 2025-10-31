@@ -79,6 +79,26 @@ public class ClassService : IClassService
 
     public async Task<ClassDto> CreateAsync(ClassCreateDto dto, CancellationToken cancellationToken = default)
     {
+        var startTime = dto.ScheduledAt;
+        var endTime = dto.ScheduledAt.AddMinutes(dto.DurationMinutes);
+
+        var hasConflict = await _dbContext.Classes
+            .AnyAsync(c =>
+                c.ClassTypeId == dto.ClassTypeId &&
+                !c.IsCancelled &&
+                (
+                    (startTime >= c.ScheduledAt && startTime < c.ScheduledAt.AddMinutes(c.DurationMinutes)) ||
+                    (endTime > c.ScheduledAt && endTime <= c.ScheduledAt.AddMinutes(c.DurationMinutes)) ||
+                    (startTime <= c.ScheduledAt && endTime >= c.ScheduledAt.AddMinutes(c.DurationMinutes))
+                ),
+                cancellationToken
+            );
+
+        if (hasConflict)
+        {
+            throw new InvalidOperationException("Já existe uma aula do mesmo tipo neste período.");
+        }
+
         var entity = new Class
         {
             ClassTypeId = dto.ClassTypeId,

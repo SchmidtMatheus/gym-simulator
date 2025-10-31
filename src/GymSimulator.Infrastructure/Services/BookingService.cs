@@ -63,6 +63,9 @@ public class BookingService : IBookingService
         if (!student.IsActive) throw new InvalidOperationException("Aluno não está ativo no sistema");
         if (!gymClass.IsActive || gymClass.IsCancelled) throw new InvalidOperationException("Aula não disponível");
 
+        var alreadyBooked = await _dbContext.Bookings.FirstOrDefaultAsync(b => b.ClassId == dto.ClassId && b.StudentId == dto.StudentId, cancellationToken);
+        if (alreadyBooked != null) throw new InvalidOperationException("Aluno já matriculado nesta aula!");
+
         if (gymClass.CurrentParticipants >= gymClass.MaxCapacity)
             throw new InvalidOperationException("Aula já está cheia!");
 
@@ -72,7 +75,7 @@ public class BookingService : IBookingService
             student.CurrentMonthYear = currentMonth;
             student.MonthlyClassCount = 0;
         }
-        if (student.MonthlyClassCount >= student.PlanType.MonthlyClassLimit)
+        if (student.MonthlyClassCount >= student.PlanType.ClassLimit)
             throw new InvalidOperationException("Número máximo de aulas para o seu plano já foi atingido!");
 
         var booking = new Booking

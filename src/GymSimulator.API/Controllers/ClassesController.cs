@@ -40,10 +40,10 @@ public class ClassesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Class>> Create([FromBody] ClassCreateDto dto, CancellationToken ct)
+    public async Task<ActionResult<ClassDto>> Create([FromBody] ClassCreateDto dto, CancellationToken ct)
     {
-        var created = await _service.CreateAsync(dto, ct);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            var created = await _service.CreateAsync(dto, ct);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
     [HttpPut("{id}")]

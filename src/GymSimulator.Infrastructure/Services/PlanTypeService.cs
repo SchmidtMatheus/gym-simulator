@@ -31,7 +31,7 @@ public class PlanTypeService : IPlanTypeService
         {
             Name = dto.Name,
             Description = dto.Description,
-            MonthlyClassLimit = dto.MonthlyClassLimit,
+            ClassLimit = dto.ClassLimit,
             IsActive = dto.IsActive,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -47,7 +47,7 @@ public class PlanTypeService : IPlanTypeService
         if (entity is null) return null;
         entity.Name = dto.Name;
         entity.Description = dto.Description;
-        entity.MonthlyClassLimit = dto.MonthlyClassLimit;
+        entity.ClassLimit = dto.ClassLimit;
         entity.IsActive = dto.IsActive;
         entity.UpdatedAt = DateTime.UtcNow;
         await _dbContext.SaveChangesAsync(cancellationToken);

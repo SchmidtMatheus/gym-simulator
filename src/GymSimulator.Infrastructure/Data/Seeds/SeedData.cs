@@ -35,9 +35,9 @@ namespace GymSimulator.Infrastructure.Data.Seeds
 
             var planTypes = new List<PlanType>
             {
-                new() { Name = "Plano Mensal", Description = "Acesso à academia em horário comercial", MonthlyClassLimit = 12 },
-                new() { Name = "Plano Trimestral", Description = "Acesso ilimitado + aulas em grupo", MonthlyClassLimit = 20 },
-                new() { Name = "Plano Anual", Description = "Acesso total + personal trainer", MonthlyClassLimit = 30 }
+                new() { Name = "Plano Mensal", Description = "Acesso à academia em horário comercial", ClassLimit = 12 },
+                new() { Name = "Plano Trimestral", Description = "Acesso ilimitado + aulas em grupo", ClassLimit = 20 },
+                new() { Name = "Plano Anual", Description = "Acesso total + personal trainer", ClassLimit = 30 }
             };
 
             await context.PlanTypes.AddRangeAsync(planTypes);

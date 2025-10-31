@@ -26,6 +26,33 @@ Como rodar (desenvolvimento)
 2. Executar API
     dotnet run
 
+### Como rodar via GUI do Visual Studio
+
+-Abrir o projeto: Abra o Visual Studio.
+-Vá em Arquivo > Abrir > Projeto/Solução...
+-Selecione o arquivo:
+```GymSimulator.sln```
+
+-No Solution Explorer, clique com o botão direito sobre:
+```GymSimulator.API```
+
+-Escolha "Definir como projeto de inicialização" (Set as Startup Project).
+
+O banco SQLite é usado no modo de desenvolvimento:
+
+```src/GymSimulator.API/gymDatabase.db```
+-Acesse Ferramentas > Gerenciador de Pacotes do Nuget > Console
+-Execute o seguinte comando:
+```Update-Database```
+
+Executar o projeto:
+
+No topo do Visual Studio, selecione Debug (ou Release, se preferir).
+
+-Clique em Iniciar sem depuração (Ctrl + F5) ou Iniciar com depuração (F5).
+
+-A API será iniciada e abrirá automaticamente no navegador
+
 Notas
 - Dados de exemplo são semeados via SeedData durante a inicialização (ver Program.cs).
 - Para criar migrations: dotnet ef migrations add <Nome> -p src/GymSimulator.API -s src/GymSimulator.API

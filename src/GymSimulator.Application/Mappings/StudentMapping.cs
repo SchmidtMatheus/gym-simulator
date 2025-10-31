@@ -12,6 +12,7 @@ namespace GymSimulator.Application.Mappings
                 Name = student.Name,
                 Email = student.Email,
                 Phone = student.Phone,
+                IsActive = student.IsActive,
                 PlanTypeName = student.PlanType?.Name ?? "N/A"
             };
         }

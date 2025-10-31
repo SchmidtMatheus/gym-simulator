@@ -6,6 +6,7 @@ public class StudentDto
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
+    public bool IsActive { get; set; }
     public string PlanTypeName { get; set; } = string.Empty;
 
 }

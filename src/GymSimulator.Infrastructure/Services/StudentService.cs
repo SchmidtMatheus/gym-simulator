@@ -62,13 +62,16 @@ public class StudentService : IStudentService
 
         var startDate = new DateTime(year, month, 1);
         var endDate = startDate.AddMonths(1).AddDays(-1);
+        var tz = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+        var startDateUtc = TimeZoneInfo.ConvertTimeToUtc(startDate, tz);
+        var endDateUtc = TimeZoneInfo.ConvertTimeToUtc(endDate.AddDays(1).AddTicks(-1), tz);
 
         var studentBookings = await _dbContext.Bookings
             .Include(b => b.Class)
                 .ThenInclude(c => c.ClassType)
             .Where(b => b.StudentId == studentId &&
-                       b.BookingDate >= startDate &&
-                       b.BookingDate <= endDate &&
+                       b.Class.ScheduledAt >= startDateUtc &&
+                       b.Class.ScheduledAt <= endDateUtc &&
                        b.BookingStatus != Domain.Enums.BookingStatus.Cancelado)
             .ToListAsync(cancellationToken);
 
